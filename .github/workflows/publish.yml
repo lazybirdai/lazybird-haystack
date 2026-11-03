@@ -1,0 +1,21 @@
+# Publishes to PyPI on every version tag (0.1.0, no "v") through PyPI trusted publishing:
+# GitHub's OIDC token signs in, so there is no PyPI token to renew.
+name: Publish
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1
